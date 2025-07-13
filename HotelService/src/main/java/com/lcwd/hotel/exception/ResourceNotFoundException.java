@@ -1,0 +1,16 @@
+package com.lcwd.hotel.exception;
+
+import org.springframework.stereotype.Component;
+
+@Component
+public class ResourceNotFoundException extends RuntimeException {
+
+	public ResourceNotFoundException(String s) {
+		super(s);
+	}
+	
+	public ResourceNotFoundException() {
+		super("Resource not found !!");
+	}
+
+}
