@@ -8,11 +8,15 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "micro_users")
+@Table(name= "micro_users")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
 	
 	@Id
@@ -25,7 +29,7 @@ public class User {
 	@Column(name = "about")
 	private String about;
 	
-	@Transient
+	@Transient // This field will not be stored in the database, means this field will be ignored.
 	private List<Rating> ratings = new ArrayList<>();
 	
 

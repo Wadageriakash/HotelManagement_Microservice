@@ -1,7 +1,7 @@
 ## DataSource configuration
 spring:
   application:
-    name: USER-SERVICE 
+    name: USER-SERVICE
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/postgres

@@ -1,10 +1,12 @@
 # DataSource configuration
 spring:
+  application:
+    name: RATING-SERVICE
   datasource:
-    driver-class-name: oracle.jdbc.OracleDriver
-    url: jdbc:oracle:thin:@//localhost:1521/free
-    username: microservice
-    password: hrms
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: Ocean@666#
 
 # JPA and Hibernate settings
   jpa:
@@ -13,7 +15,7 @@ spring:
     show-sql: true
     properties:
       hibernate:
-      database-platform: org.hibernate.dialect.Oracle12cDialect
+      database-platform: org.hibernate.dialect.PostgreSQLDialect
 
 # Server configuration
 server:
@@ -28,5 +30,3 @@ eureka:
     service-url:
       defaultZone: http://localhost:8761/eureka
       
-application:
-  name: RATING-SERVICE

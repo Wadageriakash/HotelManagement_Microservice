@@ -23,7 +23,6 @@ public class UserController {
 	UserService userService;
 
 	// create
-	
 	@PostMapping("/createuser")
 	public ResponseEntity<User> createUser(@RequestBody User user) {
 		User user1 = userService.saveUser(user);
@@ -38,7 +37,6 @@ public class UserController {
 	}
 	
 	// get all user
-	
 	@GetMapping("/alluser")
 	public ResponseEntity<List<User>> getAllUser(){
 		List<User> allUser = userService.getAllUser();
