@@ -1,17 +1,21 @@
 ## DataSource configuration
 spring:
   application:
-    name: USER-SERVICE
+    name: USER-SERVICE # This name should match the configuration file name in your Git repo (e.g., USER-SERVICE.yml)
+  config:
+    import: optional:configserver:http://localhost:8085 # Config Server URI
+#  profiles:
+#    active: dev # Or prod, test, etc. - tells Config Server which profile to use
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
-    password: Ocean@666#
+    password: Ocean@666# # Hardcoded password - NOT recommended for production!
 
 # JPA and Hibernate settings
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: update # Hibernate DDL generation strategy - use 'none' or 'validate' in production
     show-sql: true
     properties:
       hibernate:
@@ -20,72 +24,46 @@ spring:
 # Server configuration
 server:
   port: 8081
+
 #  
-eureka:
-  instance:
-    prefer-ip-address: true
-  client:
-    fetch-registry: true
-    register-with-eureka: true
-    service-url:
-      defaultZone: http://localhost:8761/eureka
-      
- 
-management:
-  endpoints:
-    web:
-      base-path: /admin
-      exposure:
-        include: "*" #"shutdown, health, info"
-  endpoint:
-    helath:
-      show-details: true
-    shutdown:
-      enabled: true
-#    info:
-#       enabled:false
-
-
-      
-# Spring Boot Application Configuration
-#spring:
-#  application:
-#    name: USER-SERVICE
-#
-#  datasource:
-#    driver-class-name: org.postgresql.Driver
-#    url: jdbc:postgresql://localhost:5432/postgres
-#    username: ${DB_USERNAME:postgres}  # Use environment variables for security
-#    password: ${DB_PASSWORD:probuddy}
-#
-#    # HikariCP Connection Pooling (Recommended for better performance)
-#    hikari:
-#      maximum-pool-size: 10
-#      minimum-idle: 2
-#      idle-timeout: 30000
-#      pool-name: HikariCP-Pool
-#
-#  # JPA and Hibernate settings
-#  jpa:
-#    hibernate:
-#      ddl-auto: update
-#    show-sql: true
-#    properties:
-#      hibernate:
-#        dialect: org.hibernate.dialect.PostgreSQLDialect
-#
-## Server Configuration
-#server:
-#  port: 8081
-
-# Eureka Client Configuration
-#eureka:
+#eureka: # Commented out, but good to keep in mind for full microservice setup
 #  instance:
 #    prefer-ip-address: true
-#    instance-id: ${spring.application.name}:${server.port}  # Unique instance ID
 #  client:
 #    fetch-registry: true
 #    register-with-eureka: true
 #    service-url:
 #      defaultZone: http://localhost:8761/eureka
+      
+
+# Spring Boot Actuator settings
+management:
+  endpoints:
+    web:
+#      base-path: /admin # Custom base path for actuator endpoints
+      exposure:
+        include: "*" # Exposes all actuator endpoints. Be cautious in production!
+  endpoint:
+    helath: # Typo here, should be 'health'
+      show-details: always
+    shutdown:
+      enabled: true # Enables the /admin/shutdown endpoint. Very dangerous in production without security!
+  health:
+    circuitbreakers:
+      enabled: true
+
+resilience4j:
+   circuitbreaker:
+    instances:
+# The instance name (ratingHotelBreaker) should be indented under 'instances'
+      ratingHotelBreaker:
+        registerHealthIndicator: true
+        eventConsumerBufferSize: 10
+        failureRateThreshold: 50 # Percentage (50% failures to trip the circuit)
+        minimumNumberOfCalls: 5 # Min calls before failure rate is calculated
+#        automaticTransitionFromOpenHalfOpenEnabled: true # Automatically transition from Open to Half-Open, The automatic transition to HALF_OPEN after the waitDurationInOpenState will happen by default.
+        waitDurationInOpenState: 6s # How long to stay in Open state
+        permittedNumberOfCallsInHalfOpenState: 3 # Number of calls allowed in Half-Open to test recovery
+        slidingWindowSize: 10 # Number of calls to consider for failure rate calculation
+        slidingWindowType: COUNT_BASED # Window type (COUNT_BASED or TIME_BASED)
 
