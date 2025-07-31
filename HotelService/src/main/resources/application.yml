@@ -3,7 +3,7 @@ spring:
   application:
     name: HOTEL-SERVICE
   config:
-    import: configserver:http://localhost:8085 # Config Server URI
+    import: optional:configserver:http://localhost:8085 # Config Server URI
 
   datasource:
     driver-class-name: org.postgresql.Driver
